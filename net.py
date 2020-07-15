@@ -36,7 +36,6 @@ if __name__ == '__main__':
     输出的形状是否正确，数据类型是否正确等
     '''
     net = netV1()
-    x = torch.randn(10,784)
-    h = net(x)
+    h = torch.randn(10,784)
     print(h.shape)
     print(h.dtype)

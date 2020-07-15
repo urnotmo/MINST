@@ -55,6 +55,7 @@ if __name__ == '__main__':
     dataset = MINSTdataSet('data\MNIST_IMG', is_train=True)
     print(len(dataset))
     print(dataset[3])
+    print(dataset[3][0].shape)
     print(dataset[3][0].dtype)
     print(dataset[3][1].dtype)
 
