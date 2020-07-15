@@ -5,10 +5,14 @@ import torch, cv2, os
 class MINSTdataSet(Dataset):
     '''
     处理自己的数据集，继承了torch.utils包里面的Dataset
+    init把数据和标签封装在一起
+    len 返回数据的长度
+    gititem 如何获取数据集中的数据和标签
     '''
     def __init__(self, root, is_train = True):
         '''
-        封装自己的数据集,
+        封装自己的数据集,把数据的地址存下来，
+        除文本这一类数据少的可以一次性直接读以外存的都是路径
         :param root: 数据的根目录
         :param is_train: 加载的是哪个数据集该例子中默认加载的是训练集
         '''
@@ -36,11 +40,13 @@ class MINSTdataSet(Dataset):
         '''
         data = self.dataset[index]  # 获取每条数据的地址和标签
         img_data = cv2.imread(data[0], cv2.IMREAD_GRAYSCALE)     # cv2读取图片，读出来的类型为ndarray类型
+        img_data = torch.tensor(img_data, dtype= torch.float32)
+
         img_data = img_data.reshape(-1)     # 将
         img_data = img_data/255     # 将数据进行最大范数归一化
 
         tag_one_hot = torch.zeros(10)   # 对标签进行one_hot编码
-        tag_one_hot[int(data[1])] = 1
+        tag_one_hot[int(data[1])] = 1.0
 
         return img_data, tag_one_hot
 
@@ -49,9 +55,22 @@ if __name__ == '__main__':
     dataset = MINSTdataSet('data\MNIST_IMG', is_train=True)
     print(len(dataset))
     print(dataset[3])
+    print(dataset[3][0].dtype)
+    print(dataset[3][1].dtype)
+
+    # a = np.array(2.)
+    # b = torch.tensor(3.)
+    # print(a.dtype)
+    # print(b.dtype)
+    #
+    # c = torch.from_numpy(a)
+    # d = b.numpy()
+    #
+    # print(c.dtype)
+    # print(d.dtype)
 
 
-# 自己瞎搞
+# # 自己瞎搞
 # import os, torch, cv2
 # from torch.utils.data import Dataset
 # import time
@@ -60,7 +79,7 @@ if __name__ == '__main__':
 #     '''
 #     处理自己的数据以便能输入模型
 #     '''
-#     def __init__(self, root, is_train):
+#     def __init__(self, root, is_train = True):
 #         self.dataset = []
 #         sub_dir = 'TRAIN' if is_train else 'TEST'
 #         for tag in os.listdir(f'{root}/{sub_dir}'):
@@ -74,8 +93,7 @@ if __name__ == '__main__':
 #     def __getitem__(self, index):
 #         data = self.dataset[index]
 #         img_data = cv2.imread(data[0], cv2.IMREAD_GRAYSCALE)
-#         # print(img_data)
-#         # print("###########")
+#
 #         img_data = img_data.reshape(-1)
 #         img_data = img_data/255
 #
