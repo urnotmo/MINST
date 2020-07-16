@@ -70,7 +70,7 @@ class train:
 
                 # item 计算的是python的标量，不可以放到CUDA上计算，所以要转为cpu上计算
                 train_sum_loss += loss.cpu().detach().item()
-            train_avg_loss =train_sum_loss/ len(self.train_dataset)
+            train_avg_loss =train_sum_loss/ len(self.train_dataloder)
             train_te = time.time()
             train_time = train_te - train_ts
 
@@ -94,7 +94,7 @@ class train:
                 label_tage = torch.argmax(test_tage,dim=1)
                 score_sum +=torch.sum(torch.eq(pre_tage, label_tage).float())
 
-            test_avg_loss = loss.item() / len(self.test_dataset)
+            test_avg_loss = loss.item() / len(self.test_dataloader)
             test_te = time.time()
             test_time = test_te - test_ts
             score_avg = score_sum / len(self.test_dataset)
